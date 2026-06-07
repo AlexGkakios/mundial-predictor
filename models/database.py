@@ -5,7 +5,15 @@ DB_PATH = Path("database/mundial.db")
 
 
 def get_connection():
-    return sqlite3.connect(DB_PATH, timeout=30)
+    conn = sqlite3.connect(
+        DB_PATH,
+        timeout=30,
+        check_same_thread=False
+    )
+
+    conn.row_factory = sqlite3.Row
+
+    return conn
 
 
 def initialize_database():

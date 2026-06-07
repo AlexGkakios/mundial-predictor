@@ -125,25 +125,26 @@ def add_match():
         return "Δεν έχεις πρόσβαση"
 
     from models.database import get_connection
+    try: 
+        home = request.form["home_team"]
+        away = request.form["away_team"]
+        phase = request.form["phase"]
+        kickoff = request.form["kickoff"]
+        group = request.form["group_name"]
 
-    home = request.form["home_team"]
-    away = request.form["away_team"]
-    phase = request.form["phase"]
-    kickoff = request.form["kickoff"]
-    group = request.form["group_name"]
+        conn = get_connection()
+        cursor = conn.cursor()
 
-    conn = get_connection()
-    cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO matches
+            (home_team, away_team, phase, kickoff , group_name)
+            VALUES (?, ?, ?, ?, ?)
+        """, (home, away, phase, kickoff, group))
 
-    cursor.execute("""
-        INSERT INTO matches
-        (home_team, away_team, phase, kickoff , group_name)
-        VALUES (?, ?, ?, ?, ?)
-    """, (home, away, phase, kickoff, group))
-
-    conn.commit()
-    conn.close()
-
+        conn.commit()
+        
+    finally:
+            conn.close()
     return redirect("/admin")
 
 

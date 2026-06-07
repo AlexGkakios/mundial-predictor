@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Matches</title>
+    <style>
+body {
+    font-family: Arial;
+    background:#0f172a;
+    color:white;
+    margin:0;
+}
+
+.nav {
+    background:#111827;
+    padding:12px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.nav a {
+    color:#60a5fa;
+    margin-right:12px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.nav a:hover {
+    color:white;
+}
+
+.container {
+    width:90%;
+    max-width:1100px;
+    margin:auto;
+    padding:20px;
+}
+
+.card {
+    background:#1e293b;
+    padding:15px;
+    margin:15px 0;
+    border-radius:10px;
+}
+
+input {
+    padding:8px;
+    margin:5px;
+    border-radius:6px;
+    border:none;
+}
+
+button {
+    padding:8px 12px;
+    background:#22c55e;
+    border:none;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+button:hover {
+    background:#16a34a;
+}
+</style>
+</head>
+
+<body>
+
+<h1>⚽ Αγώνες</h1>
+
+{% for match in matches %}
+
+<div style="border:1px solid black; padding:10px; margin:10px">
+
+    <h3>
+        {{ match[1] }} vs {{ match[2] }}
+    </h3>
+
+    <p>Φάση: {{ match[3] }}</p>
+    <p>Kickoff: {{ match[4] }}</p>
+
+    <form method="POST" action="/predict/{{ match[0] }}">
+
+        <input name="home_score" placeholder="Home">
+        <input name="away_score" placeholder="Away">
+
+        <button type="submit">Πρόβλεψη</button>
+
+    </form>
+
+</div>
+
+{% endfor %}
+
+</body>
+</html>

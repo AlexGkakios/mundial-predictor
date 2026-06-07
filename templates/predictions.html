@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Predictions</title>
+{{ base_style | safe }}
+<style>
+body {
+    font-family: Arial;
+    background:#0f172a;
+    color:white;
+    margin:0;
+}
+
+.nav {
+    background:#111827;
+    padding:12px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.nav a {
+    color:#60a5fa;
+    margin-right:12px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.nav a:hover {
+    color:white;
+}
+
+.container {
+    width:90%;
+    max-width:1100px;
+    margin:auto;
+    padding:20px;
+}
+
+.card {
+    background:#1e293b;
+    padding:15px;
+    margin:15px 0;
+    border-radius:10px;
+}
+
+input {
+    padding:8px;
+    margin:5px;
+    border-radius:6px;
+    border:none;
+}
+
+button {
+    padding:8px 12px;
+    background:#22c55e;
+    border:none;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+button:hover {
+    background:#16a34a;
+}
+</style>
+</head>
+
+<body>
+
+<div class="nav">
+    <div>
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/leaderboard">🏆 Leaderboard</a>
+        {% if session.role == "admin" %}
+            <a href="/admin">⚙️ Admin</a>
+        {% endif %}
+        <a href="/standings">📊 Standings</a>    </div>
+
+    <div>
+        <a href="javascript:history.back()">🔙 Back</a>
+        <a href="/logout">🚪 Logout</a>
+    </div>
+</div>
+
+<div class="container">
+
+<h1>📊 All Predictions</h1>
+
+{% set ns = namespace(user='') %}
+
+{% for p in predictions %}
+
+    {% if ns.user != p[2] %}
+        {% set ns.user = p[2] %}
+        <h2>👤 {{ p[2] }}</h2>
+    {% endif %}
+
+    <div class="card">
+        <h3>{{ p[0] }} vs {{ p[1] }}</h3>
+        <p>{{ p[3] }} - {{ p[4] }}</p>
+        <p>⚽ {{ p[5] }}</p>
+    </div>
+
+{% endfor %}
+
+</div>
+
+</body>
+</html>

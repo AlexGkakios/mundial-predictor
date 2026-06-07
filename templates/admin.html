@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Panel</title>
+
+<style>
+body{
+    font-family:Arial;
+    background:#0f172a;
+    color:white;
+    margin:0;
+}
+
+.nav{
+    background:#111827;
+    padding:12px 20px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.nav a{
+    color:#60a5fa;
+    text-decoration:none;
+    margin-right:10px;
+}
+
+.container{
+    width:90%;
+    max-width:1100px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:#1e293b;
+    padding:15px;
+    margin:15px 0;
+    border-radius:10px;
+}
+
+input,select{
+    padding:8px;
+    margin:5px;
+}
+
+button{
+    padding:8px 12px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    color:white;
+    background:#22c55e;
+}
+
+.delete-btn{
+    background:#dc2626;
+}
+
+.delete-btn:hover{
+    background:#b91c1c;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="nav">
+
+    <div>
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/leaderboard">🏆 Leaderboard</a>
+        <a href="/predictions">📊 Predictions</a>
+        <a href="/groups">🌍 Groups</a>
+        <a href="/standings">📈 Standings</a>
+    </div>
+
+    <div>
+        <a href="javascript:history.back()">🔙 Back</a>
+        <a href="/logout">🚪 Logout</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+<h1>⚙️ Admin Panel</h1>
+
+<div class="card">
+
+<h3>➕ Add Match</h3>
+
+<form method="POST" action="/add_match">
+
+    <input name="home_team" placeholder="Home Team" required>
+
+    <input name="away_team" placeholder="Away Team" required>
+
+    <select name="group_name">
+
+        <option value="A">Group A</option>
+        <option value="B">Group B</option>
+        <option value="C">Group C</option>
+        <option value="D">Group D</option>
+        <option value="E">Group E</option>
+        <option value="F">Group F</option>
+        <option value="G">Group G</option>
+        <option value="H">Group H</option>
+        <option value="I">Group I</option>
+        <option value="J">Group J</option>
+        <option value="K">Group K</option>
+        <option value="L">Group L</option>
+
+    </select>
+
+    <input name="phase" placeholder="Phase" required>
+
+    <input
+        name="kickoff"
+        placeholder="2026-06-11 22:00"
+        required>
+
+    <button type="submit">
+        Add Match
+    </button>
+
+</form>
+
+</div>
+
+<div class="card">
+
+<h3>➕ Add Team To Group</h3>
+
+<form method="POST" action="/add_group_team">
+
+    <input
+        name="team_name"
+        placeholder="Team Name"
+        required>
+
+    <select name="group_name">
+
+        <option value="A">Group A</option>
+        <option value="B">Group B</option>
+        <option value="C">Group C</option>
+        <option value="D">Group D</option>
+        <option value="E">Group E</option>
+        <option value="F">Group F</option>
+        <option value="G">Group G</option>
+        <option value="H">Group H</option>
+        <option value="I">Group I</option>
+        <option value="J">Group J</option>
+        <option value="K">Group K</option>
+        <option value="L">Group L</option>
+
+    </select>
+
+    <button type="submit">
+        Add Team
+    </button>
+
+</form>
+
+</div>
+
+<h2>📋 Matches</h2>
+
+{% for match in matches %}
+
+<div class="card">
+
+{% if match[9] == 1 %}
+
+    <h3 style="color:lime;">
+        ✔ Finished
+    </h3>
+
+    <h2>
+        {{ match[1] }}
+        {{ match[6] }}
+        -
+        {{ match[7] }}
+        {{ match[2] }}
+    </h2>
+
+    <p>
+        ⚽ {{ match[8] }}
+    </p>
+
+{% else %}
+
+    <h3>
+        {{ match[1] }} vs {{ match[2] }}
+    </h3>
+
+    <p>
+        Group {{ match[3] }}
+    </p>
+
+    <p>
+        {{ match[4] }}
+    </p>
+
+    <p>
+        🕒 {{ match[5] }}
+    </p>
+
+    <form method="POST"
+          action="/finish_match/{{ match[0] }}">
+
+        <input
+            name="home_score"
+            placeholder="Home Score"
+            required>
+
+        <input
+            name="away_score"
+            placeholder="Away Score"
+            required>
+
+        <input
+            name="scorers"
+            placeholder="Scorers">
+
+        <button type="submit">
+            Finish Match
+        </button>
+
+    </form>
+
+    <br>
+
+    <form method="POST"
+          action="/delete_match/{{ match[0] }}"
+          onsubmit="return confirm('Delete this match?');">
+
+        <button
+            class="delete-btn"
+            type="submit">
+
+            🗑 Delete Match
+
+        </button>
+
+    </form>
+
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</body>
+</html>

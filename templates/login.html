@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+}
+
+.container {
+    width: 400px;
+    margin: auto;
+    margin-top: 100px;
+}
+
+.card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: #22c55e;
+    border: none;
+    color: white;
+    border-radius: 6px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>⚽ Mundial Predictor 2026</h2>
+
+<div class="card">
+
+{% if error %}
+<div style="
+background:#7f1d1d;
+color:white;
+padding:10px;
+border-radius:8px;
+margin-bottom:15px;
+">
+    {{ error }}
+</div>
+{% endif %}
+    
+<form method="POST" action="/login">
+
+    <input name="username" required>
+    <input name="password" type="password" required>
+
+    <button type="submit">Login</button>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+
+<style>
+body {
+    font-family: Arial;
+    background:#0f172a;
+    color:white;
+    margin:0;
+}
+
+.nav {
+    background:#111827;
+    padding:12px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.nav a {
+    color:#60a5fa;
+    margin-right:12px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.nav a:hover {
+    color:white;
+}
+
+.container {
+    width:90%;
+    max-width:1100px;
+    margin:auto;
+    padding:20px;
+}
+
+.card {
+    background:#1e293b;
+    padding:15px;
+    margin:15px 0;
+    border-radius:10px;
+}
+
+input {
+    padding:8px;
+    margin:5px;
+    border-radius:6px;
+    border:none;
+}
+
+button {
+    padding:8px 12px;
+    background:#22c55e;
+    border:none;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+button:hover {
+    background:#16a34a;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="nav">
+
+    <div>
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/leaderboard">🏆 Leaderboard</a>
+
+        {% if role == "admin" %}
+        <a href="/admin">⚙️ Admin</a>
+        {% endif %}
+
+        <a href="/predictions">📊 Predictions</a>
+        <a href="/groups">🌍 Groups</a>
+        <a href="/standings">📈 Standings</a>
+        <a href="/profile/{{ username }}">👤 My Profile</a>
+    </div>
+
+    <div>
+        <a href="javascript:history.back()">🔙 Back</a>
+        <a href="/logout">🚪 Logout</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+<h2>👋 Welcome {{ username }}</h2>
+
+{% if error %}
+    <div style="
+        background:#7f1d1d;
+        padding:10px;
+        margin-bottom:15px;
+        border-radius:8px;
+        ">
+        {{ error }}
+    </div>
+{% endif %}
+
+{% for match in matches %}
+
+<div class="card">
+
+    <h3>{{ match[1] }} vs {{ match[2] }}</h3>
+
+    <p>
+        🌍 Group {{ match[3] }}
+    </p>
+
+    <p>
+        🏆 {{ match[4] }}
+    </p>
+
+    <p>
+        📅 {{ match[5] }}
+    </p>
+
+    {% if match[9] == 1 %}
+
+        <h3 style="color:lime;">
+            ✔ FINISHED
+        </h3>
+
+        <p>
+            <strong>{{ match[6] }} - {{ match[7] }}</strong>
+        </p>
+
+        <p>
+            ⚽ Scorers: {{ match[8] }}
+        </p>
+
+    {% else %}
+
+        {% if role != "admin" %}
+
+            <form method="POST" action="/predict/{{ match[0] }}">
+
+                <input
+                    type="number"
+                    name="home_score"
+                    placeholder="Home Score"
+                    required
+                >
+
+                <input
+                    type="number"
+                    name="away_score"
+                    placeholder="Away Score"
+                    required
+                >
+
+                <input
+                    name="scorers"
+                    placeholder="Scorers (comma separated)"
+                >
+
+                <button type="submit">
+                    Submit Prediction
+                </button>
+
+            </form>
+
+        {% else %}
+
+            <p style="color:orange;">
+                ⚙️ Admin view (predictions disabled)
+            </p>
+
+        {% endif %}
+
+    {% endif %}
+
+    <br>
+
+    <a href="/match/{{ match[0] }}">
+        🔍 View Match
+    </a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</body>
+</html>

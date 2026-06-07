@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Groups</title>
+
+<style>
+body {
+    font-family: Arial;
+    background:#0f172a;
+    color:white;
+}
+
+.container {
+    width:90%;
+    margin:auto;
+}
+
+.grid {
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:15px;
+}
+
+.card {
+    background:#1e293b;
+    padding:15px;
+    border-radius:10px;
+}
+
+h3 {
+    color:#60a5fa;
+}
+
+.nav a {
+    color:#60a5fa;
+    margin-right:10px;
+    text-decoration:none;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🏆 World Cup Groups</h1>
+
+<div class="nav">
+    <a href="/dashboard">🏠 Dashboard</a>
+    <a href="/leaderboard">🏆 Leaderboard</a>
+    <a href="/standings">📊 Standings</a>
+    {% if session.role == "admin" %}
+            <a href="/admin">⚙️ Admin</a>
+    {% endif %}
+</div>
+
+<br>
+
+<div class="grid">
+
+{% for group, teams in groups.items() %}
+
+<div class="card">
+    <h3>Group {{ group }}</h3>
+
+    {% for team in teams %}
+        <p>⚽ {{ team }}</p>
+    {% endfor %}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</body>
+</html>

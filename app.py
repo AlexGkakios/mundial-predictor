@@ -52,10 +52,10 @@ def login():
 
     user = get_user(username)
 
-    if user and user[2] == password:
+    if user and user["password"] == password:
 
         session["user"] = username
-        session["role"] = user[3]
+        session["role"] = user["role"]
 
         return redirect("/dashboard")
 
@@ -63,7 +63,6 @@ def login():
         "login.html",
         error="Λάθος όνομα χρήστη ή κωδικός"
     )
-
 
 @app.route("/dashboard")
 def dashboard():
@@ -141,7 +140,7 @@ def add_match():
         cursor.execute("""
             INSERT INTO matches
             (home_team, away_team, phase, kickoff , group_name)
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s)
         """, (home, away, phase, kickoff, group))
 
         conn.commit()
@@ -166,13 +165,13 @@ def delete_match(match_id):
     # πρώτα σβήνουμε προβλέψεις
     cursor.execute("""
         DELETE FROM predictions
-        WHERE match_id=?
+        WHERE match_id= %s
     """, (match_id,))
 
     # μετά τον αγώνα
     cursor.execute("""
         DELETE FROM matches
-        WHERE id=?
+        WHERE id= %s
     """, (match_id,))
 
     conn.commit()
@@ -221,7 +220,7 @@ def predict(match_id):
     cursor.execute("""
         SELECT kickoff
         FROM matches
-        WHERE id=?
+        WHERE id= %s
     """, (match_id,))
 
     match = cursor.fetchone()
@@ -232,7 +231,7 @@ def predict(match_id):
 
     # ⚠️ convert kickoff
     try:
-        kickoff_time = datetime.strptime(match[0], "%d-%m-%Y %H:%M")
+        kickoff_time = datetime.strptime(match["kickoff"], "%d-%m-%Y %H:%M")
     except:
         conn.close()
         return "Invalid kickoff format in DB"
@@ -251,7 +250,7 @@ def predict(match_id):
 
     # 👤 user id
     cursor.execute("""
-        SELECT id FROM users WHERE username=?
+        SELECT id FROM users WHERE username= %s
     """, (session["user"],))
 
     user_row = cursor.fetchone()
@@ -260,12 +259,12 @@ def predict(match_id):
         conn.close()
         return "User not found"
 
-    user_id = user_row[0]
+    user_id = user_row["id"]
 
     # 🔁 check existing prediction (ΔΙΚΟ ΣΟΥ LOGIC ΑΚΟΥΜΠΗΤΟ)
     cursor.execute("""
         SELECT id FROM predictions
-        WHERE player_id=? AND match_id=?
+        WHERE player_id=%s AND match_id=%s
     """, (user_id, match_id))
 
     existing = cursor.fetchone()
@@ -283,7 +282,7 @@ def predict(match_id):
     cursor.execute("""
         INSERT INTO predictions
         (player_id, match_id, home_score, away_score, scorers)
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s, %s)
     """, (user_id, match_id, home, away, scorers))
 
     conn.commit()
@@ -376,7 +375,7 @@ def finish_match(match_id):
     cursor.execute("""
         SELECT finished
         FROM matches
-        WHERE id=?
+        WHERE id=%s
     """, (match_id,))
 
     match = cursor.fetchone()
@@ -385,7 +384,7 @@ def finish_match(match_id):
         conn.close()
         return "Match not found"
 
-    if match[0] == 1:
+    if match["finished"] == 1:
         conn.close()
         return "⛔ Match already finished (no double scoring allowed)"
 
@@ -397,18 +396,18 @@ def finish_match(match_id):
     # 🟢 2. update match (mark finished FIRST)
     cursor.execute("""
         UPDATE matches
-        SET home_score=?,
-            away_score=?,
-            scorers=?,
+        SET home_score=%s,
+            away_score=%s,
+            scorers=%s,
             finished=1
-        WHERE id=?
+        WHERE id=%s
     """, (home_score, away_score, scorers, match_id))
 
     # 👇 fetch predictions
     cursor.execute("""
         SELECT player_id, home_score, away_score, scorers
         FROM predictions
-        WHERE match_id=?
+        WHERE match_id=%s
     """, (match_id,))
 
     predictions = cursor.fetchall()
@@ -417,26 +416,26 @@ def finish_match(match_id):
     for p in predictions:
 
         pred = {
-            "home_score": p[1],
-            "away_score": p[2],
-            "scorers": p[3]
+            "home_score": p["home_score"],
+            "away_score": p["away_score"],
+            "scorers": p["scorers"]
         }
 
         result = calculate_points(pred, home_score, away_score, scorers)
 
         cursor.execute("""
             UPDATE users
-            SET points = points + ?,
-                exact_scores = exact_scores + ?,
-                correct_results = correct_results + ?,
-                correct_scorers = correct_scorers + ?
-            WHERE id=?
+            SET points = points + %s,
+                exact_scores = exact_scores + %s,
+                correct_results = correct_results + %s,
+                correct_scorers = correct_scorers + %s
+            WHERE id=%s
         """, (
             result["points"],
             result["exact"],
             result["result"],
             result["scorers"],
-            p[0]
+            p["player_id"]
         ))
 
     conn.commit()
@@ -486,7 +485,7 @@ def profile(username):
     cursor.execute("""
         SELECT id, username, points, exact_scores, correct_results, correct_scorers
         FROM users
-        WHERE username=?
+        WHERE username=%s
     """, (username,))
 
     user = cursor.fetchone()
@@ -498,7 +497,7 @@ def profile(username):
         FROM predictions p
         JOIN matches m ON m.id = p.match_id
         JOIN users u ON u.id = p.player_id
-        WHERE u.username=?
+        WHERE u.username=%s
     """, (username,))
 
     history = cursor.fetchall()
@@ -518,7 +517,7 @@ def match_page(match_id):
     cursor.execute("""
         SELECT *
         FROM matches
-        WHERE id=?
+        WHERE id=%s
     """, (match_id,))
 
     match = cursor.fetchone()
@@ -528,7 +527,7 @@ def match_page(match_id):
         SELECT u.username, p.home_score, p.away_score, p.scorers
         FROM predictions p
         JOIN users u ON u.id = p.player_id
-        WHERE p.match_id=?
+        WHERE p.match_id=%s
         ORDER BY u.username
     """, (match_id,))
 
@@ -562,9 +561,14 @@ def groups():
 
     groups_dict = {}
 
-    for g, team in data:
+    for row in data:
+
+        g = row["group_name"]
+        team = row["team_name"]
+
         if g not in groups_dict:
             groups_dict[g] = []
+
         groups_dict[g].append(team)
 
     return render_template("groups.html", groups=groups_dict)
@@ -585,7 +589,7 @@ def add_group_team():
 
     cursor.execute("""
         INSERT INTO groups (group_name, team_name)
-        VALUES (?, ?)
+        VALUES (%s, %s)
     """, (group_name, team_name))
 
     conn.commit()
@@ -603,9 +607,13 @@ def standings():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT home_team, away_team, home_score, away_score, group_name
+        SELECT home_team,
+               away_team,
+               home_score,
+               away_score,
+               group_name
         FROM matches
-        WHERE finished=1
+        WHERE finished = 1
     """)
 
     matches = cursor.fetchall()
@@ -628,32 +636,43 @@ def standings():
                 "points": 0
             }
 
-    for h, a, hs, aw, group in matches:
+    for row in matches:
+
+        h = row["home_team"]
+        a = row["away_team"]
+        hs = row["home_score"]
+        aw = row["away_score"]
+        group = row["group_name"]
 
         init_team(group, h)
         init_team(group, a)
 
         # stats
-        for team in [(h, hs, aw), (a, aw, hs)]:
-            t, gf, ga = team
+        for team_data in [(h, hs, aw), (a, aw, hs)]:
+            t, gf, ga = team_data
+
             table[group][t]["played"] += 1
             table[group][t]["gf"] += gf
             table[group][t]["ga"] += ga
 
         # points
         if hs > aw:
+
             table[group][h]["wins"] += 1
             table[group][a]["losses"] += 1
             table[group][h]["points"] += 3
 
         elif aw > hs:
+
             table[group][a]["wins"] += 1
             table[group][h]["losses"] += 1
             table[group][a]["points"] += 3
 
         else:
+
             table[group][h]["draws"] += 1
             table[group][a]["draws"] += 1
+
             table[group][h]["points"] += 1
             table[group][a]["points"] += 1
 
@@ -669,9 +688,12 @@ def standings():
                 ),
                 reverse=True
             )
-    )
+        )
 
-    return render_template("standings.html", table=table)
+    return render_template(
+        "standings.html",
+        table=table
+    )
 
 
 if __name__ == "__main__":

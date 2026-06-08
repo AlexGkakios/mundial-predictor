@@ -117,7 +117,7 @@ button{
 
     <input
         name="kickoff"
-        placeholder="2026-06-11 22:00"
+        placeholder="11-06-2026 22:00"
         required>
 
     <button type="submit">
@@ -170,44 +170,44 @@ button{
 
 <div class="card">
 
-{% if match[9] == 1 %}
+{% if match.finished == 1 %}
 
     <h3 style="color:lime;">
         ✔ Finished
     </h3>
 
     <h2>
-        {{ match[1] }}
-        {{ match[6] }}
+        {{ match.home_team }}
+        {{ match.home_score }}
         -
-        {{ match[7] }}
-        {{ match[2] }}
+        {{ match.away_score }}
+        {{ match.away_team }}
     </h2>
 
     <p>
-        ⚽ {{ match[8] }}
+        ⚽ {{ match.scorers }}
     </p>
 
 {% else %}
 
     <h3>
-        {{ match[1] }} vs {{ match[2] }}
+        {{ match.home_team }} vs {{ match.away_team }}
     </h3>
 
     <p>
-        Group {{ match[3] }}
+        Group {{ match.group_name }}
     </p>
 
     <p>
-        {{ match[4] }}
+        {{ match.phase }}
     </p>
 
     <p>
-        🕒 {{ match[5] }}
+        🕒 {{ match.kickoff }}
     </p>
 
     <form method="POST"
-          action="/finish_match/{{ match[0] }}">
+          action="/finish_match/{{ match.id }}">
 
         <input
             name="home_score"
@@ -232,7 +232,7 @@ button{
     <br>
 
     <form method="POST"
-          action="/delete_match/{{ match[0] }}"
+          action="/delete_match/{{ match.id }}"
           onsubmit="return confirm('Delete this match?');">
 
         <button

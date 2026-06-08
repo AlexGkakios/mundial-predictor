@@ -86,11 +86,11 @@ button:hover {
 
 <div class="container">
 
-<h1>⚽ {{ match[1] }} vs {{ match[2] }}</h1>
+<h1>⚽ {{ match.home_team }} vs {{ match.away_team }}</h1>
 
-{% if match[9] == 1 %}
-    <h2 style="color:lime;">FINAL: {{ match[6] }} - {{ match[7] }}</h2>
-    <p>⚽ Scorers: {{ match[8] }}</p>
+{% if match.finished == 1 %}
+    <h2 style="color:lime;">FINAL: {{ match.home_score }} - {{ match.away_score }}</h2>
+    <p>⚽ Scorers: {{ match.scorers }}</p>
 {% else %}
     <h3>⏳ Upcoming match</h3>
 {% endif %}
@@ -101,9 +101,9 @@ button:hover {
 
 {% for p in predictions %}
 <div class="card">
-    <h3>{{ p[0] }}</h3>
-    <p>{{ p[1] }} - {{ p[2] }}</p>
-    <p>⚽ {{ p[3] }}</p>
+    <h3>{{ p.username }}</h3>
+    <p>{{ p.home_score }} - {{ p.away_score }}</p>
+    <p>⚽ {{ p.scorers }}</p>
 </div>
 {% endfor %}
 

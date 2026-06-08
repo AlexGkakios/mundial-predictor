@@ -111,39 +111,39 @@ button:hover {
 
 <div class="card">
 
-    <h3>{{ match[1] }} vs {{ match[2] }}</h3>
+    <h3>{{ match.home_team }} vs {{ match.away_team }}</h3>
 
     <p>
-        🌍 Group {{ match[3] }}
+        🌍 Group {{ match.group_name }}
     </p>
 
     <p>
-        🏆 {{ match[4] }}
+        🏆 {{ match.phase }}
     </p>
 
     <p>
-        📅 {{ match[5] }}
+        📅 {{ match.kickoff }}
     </p>
 
-    {% if match[9] == 1 %}
+    {% if match.finished == 1 %}
 
         <h3 style="color:lime;">
             ✔ FINISHED
         </h3>
 
         <p>
-            <strong>{{ match[6] }} - {{ match[7] }}</strong>
+            <strong>{{ match.home_score }} - {{ match.away_score }}</strong>
         </p>
 
         <p>
-            ⚽ Scorers: {{ match[8] }}
+            ⚽ Scorers: {{ match.scorers }}
         </p>
 
     {% else %}
 
         {% if role != "admin" %}
 
-            <form method="POST" action="/predict/{{ match[0] }}">
+            <form method="POST" action="/predict/{{ match.id }}">
 
                 <input
                     type="number"
@@ -182,7 +182,7 @@ button:hover {
 
     <br>
 
-    <a href="/match/{{ match[0] }}">
+    <a href="/match/{{ match.id }}">
         🔍 View Match
     </a>
 

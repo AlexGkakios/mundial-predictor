@@ -75,13 +75,13 @@ button:hover {
 <div style="border:1px solid black; padding:10px; margin:10px">
 
     <h3>
-        {{ match[1] }} vs {{ match[2] }}
+        {{ match.home_team }} vs {{ match.away_team }}
     </h3>
 
-    <p>Φάση: {{ match[3] }}</p>
-    <p>Kickoff: {{ match[4] }}</p>
+    <p>Φάση: {{ match.phase }}</p>
+    <p>Kickoff: {{ match.kickoff }}</p>
 
-    <form method="POST" action="/predict/{{ match[0] }}">
+    <form method="POST" action="/predict/{{ match.id }}">
 
         <input name="home_score" placeholder="Home">
         <input name="away_score" placeholder="Away">

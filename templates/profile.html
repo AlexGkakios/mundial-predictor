@@ -86,23 +86,23 @@ button:hover {
 
 <div class="container">
 
-<h1>👤 {{ user[1] }}</h1>
+<h1>👤 {{ user.username }}</h1>
 
 <div class="card">
     <h3>📊 Stats</h3>
-    <p>Points: {{ user[2] }}</p>
-    <p>Exact Scores: {{ user[3] }}</p>
-    <p>Results: {{ user[4] }}</p>
-    <p>Scorers: {{ user[5] }}</p>
+    <p>Points: {{ user.points }}</p>
+    <p>Exact Scores: {{ user.exact_scores }}</p>
+    <p>Results: {{ user.correct_results }}</p>
+    <p>Scorers: {{ user.correct_scorers }}</p>
 </div>
 
 <h2>📜 Prediction History</h2>
 
 {% for h in history %}
 <div class="card">
-    <h3>{{ h[0] }} vs {{ h[1] }}</h3>
-    <p>Prediction: {{ h[2] }} - {{ h[3] }}</p>
-    <p>⚽ Scorers: {{ h[4] }}</p>
+    <h3>{{ h.home_team }} vs {{ h.away_team }}</h3>
+    <p>Prediction: {{ h.home_score }} - {{ h.away_score }}</p>
+    <p>⚽ Scorers: {{ h.scorers }}</p>
 </div>
 {% endfor %}
 

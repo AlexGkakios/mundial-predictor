@@ -104,12 +104,12 @@ button:hover {
 
 {% for u in users %}
 <tr>
-    <td>{{ u[0] }}</td>
-    <td>{{ u[1] }}</td>
-    <td>{{ u[2] }}</td>
-    <td>{{ u[3] }}</td>
-    <td>{{ u[4] }}</td>
-    <td><a href="/profile/{{ u[0] }}">👤 View</a></td>
+    <td>{{ u.username }}</td>
+    <td>{{ u.points }}</td>
+    <td>{{ u.exact_scores }}</td>
+    <td>{{ u.correct_results }}</td>
+    <td>{{ u.correct_scorers }}</td>
+    <td><a href="/profile/{{ u.username }}">👤 View</a></td>
 </tr>
 {% endfor %}
 

@@ -231,7 +231,7 @@ def predict(match_id):
 
     # ⚠️ convert kickoff
     try:
-        kickoff_time = datetime.strptime(match["kickoff"], "%d-%m-%Y %H:%M")
+        kickoff_time = datetime.strptime(match["kickoff"], "%Y-%m-%d %H:%M")
     except:
         conn.close()
         return "Invalid kickoff format in DB"

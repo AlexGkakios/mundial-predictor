@@ -15,6 +15,9 @@ from models.database import (
 from datetime import datetime
 
 from models.database import get_connection
+import os
+
+print("DATABASE_URL:", os.environ.get("DATABASE_URL"))
 
 app = Flask(__name__)
 app.secret_key = "mundial2026"

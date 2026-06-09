@@ -1,9 +1,13 @@
 
 
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
-print(os.environ["DATABASE_URL"])
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+print(DATABASE_URL)
 
 from models.database import get_connection
 import json

@@ -1,0 +1,73 @@
+body {
+    font-family: Arial;
+    background:#0f172a;
+    color:white;
+    margin:0;
+}
+
+/* container */
+.container {
+    width:95%;
+    max-width:900px;
+    margin:auto;
+    padding:10px;
+}
+
+/* match card */
+.card {
+    background:#1e293b;
+    padding:15px;
+    margin:12px 0;
+    border-radius:12px;
+}
+
+/* inputs */
+input {
+    width:100%;
+    padding:10px;
+    margin:6px 0;
+    border-radius:8px;
+    border:none;
+    box-sizing:border-box;
+}
+
+/* button */
+button {
+    width:100%;
+    padding:10px;
+    background:#22c55e;
+    border:none;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:6px;
+}
+
+button:hover {
+    background:#16a34a;
+}
+
+/* titles */
+h1, h3 {
+    text-align:center;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 600px) {
+
+    body {
+        font-size:14px;
+    }
+
+    .card {
+        padding:12px;
+    }
+
+    h1 {
+        font-size:20px;
+    }
+
+    h3 {
+        font-size:16px;
+    }
+}

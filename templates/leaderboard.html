@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Leaderboard</title>
-{{ base_style | safe }}
+
 <style>
 body {
     font-family: Arial;
@@ -44,26 +44,37 @@ body {
     border-radius:10px;
 }
 
-input {
-    padding:8px;
-    margin:5px;
-    border-radius:6px;
-    border:none;
+table {
+    width:100%;
+    border-collapse:collapse;
+}
+
+th, td {
+    padding:10px;
+    text-align:center;
+    border-bottom:1px solid #334155;
 }
 
 button {
-    padding:8px 12px;
+    padding:5px 8px;
+    margin:2px;
     background:#22c55e;
     border:none;
     color:white;
     border-radius:6px;
     cursor:pointer;
+    font-size:12px;
 }
 
 button:hover {
     background:#16a34a;
 }
+
+form {
+    display:inline;
+}
 </style>
+
 </head>
 
 <body>
@@ -74,13 +85,10 @@ button:hover {
         {% if session.role == "admin" %}
             <a href="/admin">⚙️ Admin</a>
         {% endif %}
-        <a href="/predictions">📊 Predictions</a>
-        <a href="/groups">📊 Groups</a>
-        <a href="/standings">📊 Standings</a>
+        <a href="/matches">⚽ Matches</a>
     </div>
 
     <div>
-        <a href="javascript:history.back()">🔙 Back</a>
         <a href="/logout">🚪 Logout</a>
     </div>
 </div>
@@ -91,7 +99,7 @@ button:hover {
 
 <div class="card">
 
-<table border="1" width="100%" style="color:white;">
+<table>
 
 <tr>
     <th>Player</th>
@@ -100,6 +108,7 @@ button:hover {
     <th>Results</th>
     <th>Scorers</th>
     <th>Profile</th>
+    <th>Adjust</th>
 </tr>
 
 {% for u in users %}
@@ -109,7 +118,18 @@ button:hover {
     <td>{{ u.exact_scores }}</td>
     <td>{{ u.correct_results }}</td>
     <td>{{ u.correct_scorers }}</td>
-    <td><a href="/profile/{{ u.username }}">👤 View</a></td>
+    <td><a href="/profile/{{ u.username }}">👤</a></td>
+
+    <td>
+        {% if session.role == "admin" %}
+        <form method="POST" action="/adjust_points/{{ u.id }}">
+            <button name="points" value="1">+1</button>
+            <button name="points" value="3">+3</button>
+            <button name="points" value="-1">-1</button>
+        </form>
+        {% endif %}
+    </td>
+
 </tr>
 {% endfor %}
 

@@ -349,7 +349,7 @@ def leaderboard():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT username, points, exact_scores, correct_results, correct_scorers
+        SELECT id, username, points, exact_scores, correct_results, correct_scorers
         FROM users
         ORDER BY points DESC,
                  exact_scores DESC,
@@ -694,6 +694,32 @@ def standings():
         "standings.html",
         table=table
     )
+
+
+@app.route("/adjust_points/<int:user_id>", methods=["POST"])
+def adjust_points(user_id):
+
+    if session.get("role") != "admin":
+        return render_template(
+            "access_denied.html",
+            message="Δεν έχεις δικαίωμα πρόσβασης"
+        ), 403
+
+    points_change = int(request.form["points"])
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE users
+        SET points = points + %s
+        WHERE id = %s
+    """, (points_change, user_id))
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/leaderboard")
 
 
 if __name__ == "__main__":

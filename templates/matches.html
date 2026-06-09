@@ -70,27 +70,35 @@ button:hover {
 
 <h1>⚽ Αγώνες</h1>
 
+{% set current_date = None %}
+
 {% for match in matches %}
 
-<div style="border:1px solid black; padding:10px; margin:10px">
+    {% set match_date = match.kickoff.split(' ')[0] %}
 
-    <h3>
-        {{ match.home_team }} vs {{ match.away_team }}
-    </h3>
+    {% if match_date != current_date %}
+        <h2 style="color:#60a5fa; margin-top:30px;">
+            📅 {{ match_date }}
+        </h2>
+        {% set current_date = match_date %}
+    {% endif %}
 
-    <p>Φάση: {{ match.phase }}</p>
-    <p>Kickoff: {{ match.kickoff }}</p>
+    <div class="card">
 
-    <form method="POST" action="/predict/{{ match.id }}">
+        <h3>
+            {{ match.home_team }} vs {{ match.away_team }}
+        </h3>
 
-        <input name="home_score" placeholder="Home">
-        <input name="away_score" placeholder="Away">
+        <p>Φάση: {{ match.phase }}</p>
+        <p>Kickoff: {{ match.kickoff }}</p>
 
-        <button type="submit">Πρόβλεψη</button>
+        <form method="POST" action="/predict/{{ match.id }}">
+            <input name="home_score" placeholder="Home">
+            <input name="away_score" placeholder="Away">
+            <button type="submit">Πρόβλεψη</button>
+        </form>
 
-    </form>
-
-</div>
+    </div>
 
 {% endfor %}
 

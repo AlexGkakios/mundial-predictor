@@ -2,7 +2,6 @@ import json
 
 import os
 
-os.environ["DATABASE_URL"] = "postgresql://mundial_db_yyp2_user:P80jpEg6UsDpwnQtrN2HfoDeqTDohs6I@dpg-d8ir50ek1jcs73apgt5g-a.frankfurt-postgres.render.com/mundial_db_yyp2"
 
 from models.database import get_connection
 

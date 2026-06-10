@@ -73,7 +73,7 @@ def dashboard():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM matches")
+    cursor.execute("SELECT * FROM matches ORDER BY kickoff ASC")
     matches = cursor.fetchall()
 
     conn.close()

@@ -379,6 +379,7 @@ def leaderboard():
     cursor.execute("""
         SELECT id, username, points, exact_scores, correct_results, correct_scorers
         FROM users
+        WHERE role != 'admin'
         ORDER BY points DESC,
                  exact_scores DESC,
                  correct_results DESC,

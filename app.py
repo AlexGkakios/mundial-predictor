@@ -12,6 +12,8 @@ from models.database import (
     get_user
 )
 
+from players import get_players_by_team
+
 from datetime import datetime
 
 from models.database import get_connection
@@ -77,6 +79,11 @@ def dashboard():
     matches = cursor.fetchall()
 
     conn.close()
+
+    # 🔥 ADD PLAYERS TO EACH MATCH
+    for match in matches:
+        match["home_players"] = get_players_by_team(match["home_team"])
+        match["away_players"] = get_players_by_team(match["away_team"])
 
     return render_template(
         "dashboard.html",
@@ -243,10 +250,31 @@ def predict(match_id):
         conn.close()
         return "⛔ Predictions are locked (match already started)"
 
-    # 📥 form data (δικό σου logic)
-    home = request.form["home_score"]
-    away = request.form["away_score"]
-    scorers = request.form["scorers"]
+   # 📥 form data
+    home = int(request.form["home_score"])
+    away = int(request.form["away_score"])
+
+    home_scorers = request.form.getlist("home_scorers_" + str(match_id))
+    away_scorers = request.form.getlist("away_scorers_" + str(match_id))
+
+    home_other = request.form.get("home_other_" + str(match_id), "")
+    away_other = request.form.get("away_other_" + str(match_id), "")
+
+    if home_other:
+        home_scorers.append(home_other)
+
+    if away_other:
+        away_scorers.append(away_other)
+
+    # 🚨 VALIDATION (ΑΥΤΟ ΣΟΥ ΕΛΕΙΠΕ)
+    if len(home_scorers) > home:
+        return f"⛔ Max home scorers allowed: {home}"
+
+    if len(away_scorers) > away:
+        return f"⛔ Max away scorers allowed: {away}"
+
+    # 💾 final format για DB
+    scorers = ",".join(home_scorers + away_scorers)
 
     # 👤 user id
     cursor.execute("""

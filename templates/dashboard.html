@@ -11,12 +11,14 @@ body {
     margin:0;
 }
 
+/* NAV */
 .nav {
     background:#111827;
     padding:12px 20px;
     display:flex;
     justify-content:space-between;
     align-items:center;
+    flex-wrap:wrap;
 }
 
 .nav a {
@@ -30,38 +32,86 @@ body {
     color:white;
 }
 
+/* CONTAINER */
 .container {
-    width:90%;
+    width:95%;
     max-width:1100px;
     margin:auto;
-    padding:20px;
+    padding:15px;
 }
 
+/* CARD */
 .card {
     background:#1e293b;
     padding:15px;
     margin:15px 0;
-    border-radius:10px;
+    border-radius:12px;
 }
 
+/* INPUTS */
 input {
-    padding:8px;
-    margin:5px;
-    border-radius:6px;
+    padding:10px;
+    margin:5px 0;
+    border-radius:8px;
     border:none;
+    width:100%;
+    box-sizing:border-box;
 }
 
+/* BUTTON */
 button {
-    padding:8px 12px;
+    padding:10px 12px;
     background:#22c55e;
     border:none;
     color:white;
-    border-radius:6px;
+    border-radius:8px;
     cursor:pointer;
+    width:100%;
+    margin-top:10px;
 }
 
 button:hover {
     background:#16a34a;
+}
+
+/* SCORERS BOX */
+.scorers {
+    display:flex;
+    gap:15px;
+    margin-top:10px;
+}
+
+.scorers div {
+    flex:1;
+    background:#0f172a;
+    padding:10px;
+    border-radius:10px;
+}
+
+label {
+    display:block;
+    margin:4px 0;
+    font-size:14px;
+}
+
+/* TITLES */
+h2, h3, h4 {
+    margin:8px 0;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+
+    h2 { font-size:20px; }
+    h3 { font-size:16px; }
+
+    .scorers {
+        flex-direction:column;
+    }
+
+    .card {
+        padding:12px;
+    }
 }
 </style>
 
@@ -97,12 +147,7 @@ button:hover {
 <h2>👋 Welcome {{ username }}</h2>
 
 {% if error %}
-    <div style="
-        background:#7f1d1d;
-        padding:10px;
-        margin-bottom:15px;
-        border-radius:8px;
-        ">
+    <div style="background:#7f1d1d;padding:10px;border-radius:8px;margin-bottom:15px;">
         {{ error }}
     </div>
 {% endif %}
@@ -113,66 +158,72 @@ button:hover {
 
     <h3>{{ match.home_team }} vs {{ match.away_team }}</h3>
 
-    <p>
-        🌍{{ match.group_name }}
-    </p>
-
-    
-
-    <p>
-        📅 {{ match.kickoff }}
-    </p>
+    <p>🌍 {{ match.group_name }}</p>
+    <p>📅 {{ match.kickoff }}</p>
 
     {% if match.finished == 1 %}
 
-        <h3 style="color:lime;">
-            ✔ FINISHED
-        </h3>
-
-        <p>
-            <strong>{{ match.home_score }} - {{ match.away_score }}</strong>
-        </p>
-
-        <p>
-            ⚽ Scorers: {{ match.scorers }}
-        </p>
+        <h3 style="color:lime;">✔ FINISHED</h3>
+        <p><strong>{{ match.home_score }} - {{ match.away_score }}</strong></p>
+        <p>⚽ {{ match.scorers }}</p>
 
     {% else %}
 
         {% if role != "admin" %}
 
-            <form method="POST" action="/predict/{{ match.id }}">
+        <form method="POST" action="/predict/{{ match.id }}">
 
-                <input
-                    type="number"
-                    name="home_score"
-                    placeholder="Home Score"
-                    required
-                >
+            <!-- SCORE -->
+            <input type="number" name="home_score" placeholder="Home Score" required>
+            <input type="number" name="away_score" placeholder="Away Score" required>
 
-                <input
-                    type="number"
-                    name="away_score"
-                    placeholder="Away Score"
-                    required
-                >
+            <div class="scorers">
 
-                <input
-                    name="scorers"
-                    placeholder="Scorers (comma separated)"
-                >
+                <!-- HOME -->
+                <div>
+                    <h4>🏠 Home</h4>
 
-                <button type="submit">
-                    Submit Prediction
-                </button>
+                    {% for p in match.home_players %}
+                    <label>
+                        <input type="checkbox"
+                               name="home_scorers_{{ match.id }}"
+                               value="{{ p.name }}">
+                        {{ p.name }}
+                    </label>
+                    {% endfor %}
 
-            </form>
+                    <input type="text"
+                           name="home_other_{{ match.id }}"
+                           placeholder="Other home scorer">
+                </div>
+
+                <!-- AWAY -->
+                <div>
+                    <h4>🏃 Away</h4>
+
+                    {% for p in match.away_players %}
+                    <label>
+                        <input type="checkbox"
+                               name="away_scorers_{{ match.id }}"
+                               value="{{ p.name }}">
+                        {{ p.name }}
+                    </label>
+                    {% endfor %}
+
+                    <input type="text"
+                           name="away_other_{{ match.id }}"
+                           placeholder="Other away scorer">
+                </div>
+
+            </div>
+
+            <button type="submit">Submit Prediction</button>
+
+        </form>
 
         {% else %}
 
-            <p style="color:orange;">
-                ⚙️ Admin view (predictions disabled)
-            </p>
+        <p style="color:orange;">⚙️ Admin view (predictions disabled)</p>
 
         {% endif %}
 
@@ -180,9 +231,7 @@ button:hover {
 
     <br>
 
-    <a href="/match/{{ match.id }}">
-        🔍 View Match
-    </a>
+    <a href="/match/{{ match.id }}">🔍 View Match</a>
 
 </div>
 

@@ -1,14 +1,22 @@
 import json
 
-with open("data/players.json", encoding="utf-8") as f:
-    players_data = json.load(f)
+with open("data/players.json", "r", encoding="utf-8") as f:
+    data = json.load(f)
 
-def is_valid_player(player):
-    bad_names = ["Emblem", "Team Photo"]
-    return player["name"] not in bad_names
+players = data["stickers"]
+
+
+def is_valid_player(p):
+    return (
+        isinstance(p, dict)
+        and p.get("name") not in ["Emblem", "Team Photo"]
+    )
+
 
 def get_players_by_team(team_name):
     return [
-        p for p in players_data
-        if p["team"] == team_name and is_valid_player(p)
+        p for p in players
+        if isinstance(p, dict)
+        and p.get("team") == team_name
+        and is_valid_player(p)
     ]

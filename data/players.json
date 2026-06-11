@@ -6,51 +6,6 @@
   "cutoffRule": "Everything up to and including FWC19; regionals start at CC-US1",
   "stickers": [
     {
-      "code": "00",
-      "name": "Panini Logo",
-      "team": "We Are Panini"
-    },
-    {
-      "code": "FWC1",
-      "name": "Official Emblem1",
-      "team": "FIFA World Cup 2026"
-    },
-    {
-      "code": "FWC2",
-      "name": "Official Emblem2",
-      "team": "FIFA World Cup 2026"
-    },
-    {
-      "code": "FWC3",
-      "name": "Official Mascots",
-      "team": "FIFA World Cup 2026"
-    },
-    {
-      "code": "FWC4",
-      "name": "Official Slogan",
-      "team": "FIFA World Cup 2026"
-    },
-    {
-      "code": "FWC5",
-      "name": "Official Ball",
-      "team": "FIFA World Cup 2026"
-    },
-    {
-      "code": "FWC6",
-      "name": "Canada",
-      "team": "Host Countries and Cities"
-    },
-    {
-      "code": "FWC7",
-      "name": "Mexico",
-      "team": "Host Countries and Cities"
-    },
-    {
-      "code": "FWC8",
-      "name": "USA",
-      "team": "Host Countries and Cities"
-    },
-    {
       "code": "MEX1",
       "name": "Emblem",
       "team": "Mexico"

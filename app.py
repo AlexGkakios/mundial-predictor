@@ -69,6 +69,9 @@ def login():
 @app.route("/dashboard")
 def dashboard():
 
+    print("SERVER TIME:", datetime.now())
+
+
     if "user" not in session:
         return redirect("/")
 

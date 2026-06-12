@@ -16,6 +16,8 @@ from players import get_players_by_team
 
 from datetime import datetime
 
+from datetime import datetime, timedelta
+
 from models.database import get_connection
 import os
 
@@ -83,10 +85,25 @@ def dashboard():
 
     conn.close()
 
+    # ώρα Ελλάδας
+    now = datetime.now() + timedelta(hours=3)
+
+
     # 🔥 ADD PLAYERS TO EACH MATCH
     for match in matches:
         match["home_players"] = get_players_by_team(match["home_team"])
         match["away_players"] = get_players_by_team(match["away_team"])
+
+        try:
+            kickoff = datetime.strptime(
+                match["kickoff"],
+                "%Y-%m-%d %H:%M"
+            )
+
+            match["locked"] = now >= kickoff
+
+        except:
+            match["locked"] = False
 
     return render_template(
         "dashboard.html",
@@ -246,7 +263,7 @@ def predict(match_id):
         conn.close()
         return "Invalid kickoff format in DB"
 
-    now = datetime.now()
+    now = datetime.now() + timedelta(hours=3)
 
     # 🔒 LOCK RULE
     if now >= kickoff_time:

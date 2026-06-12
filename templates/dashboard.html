@@ -171,59 +171,72 @@ h2, h3, h4 {
 
         {% if role != "admin" %}
 
-        <form method="POST" action="/predict/{{ match.id }}">
+            {% if match.locked %}
 
-            <!-- SCORE -->
-            <input type="number" name="home_score" placeholder="Home Score" required>
-            <input type="number" name="away_score" placeholder="Away Score" required>
+                <p style="
+                    color:#ef4444;
+                    font-weight:bold;
+                    font-size:18px;
+                ">
+                    ⛔ Predictions locked
+                </p>
 
-            <div class="scorers">
+            {% else %}
 
-                <!-- HOME -->
-                <div>
-                    <h4>🏠 Home</h4>
+            <form method="POST" action="/predict/{{ match.id }}">
 
-                    {% for p in match.home_players %}
-                    <label>
-                        <input type="checkbox"
-                               name="home_scorers_{{ match.id }}"
-                               value="{{ p.name }}">
-                        {{ p.name }}
-                    </label>
-                    {% endfor %}
+                    <!-- SCORE -->
+                    <input type="number" name="home_score" placeholder="Home Score" required>
+                    <input type="number" name="away_score" placeholder="Away Score" required>
 
-                    <input type="text"
-                           name="home_other_{{ match.id }}"
-                           placeholder="Other home scorer">
-                </div>
+                    <div class="scorers">
 
-                <!-- AWAY -->
-                <div>
-                    <h4>🏃 Away</h4>
+                        <!-- HOME -->
+                        <div>
+                            <h4>🏠 Home</h4>
 
-                    {% for p in match.away_players %}
-                    <label>
-                        <input type="checkbox"
-                               name="away_scorers_{{ match.id }}"
-                               value="{{ p.name }}">
-                        {{ p.name }}
-                    </label>
-                    {% endfor %}
+                            {% for p in match.home_players %}
+                            <label>
+                                <input type="checkbox"
+                                    name="home_scorers_{{ match.id }}"
+                                    value="{{ p.name }}">
+                                {{ p.name }}
+                            </label>
+                            {% endfor %}
 
-                    <input type="text"
-                           name="away_other_{{ match.id }}"
-                           placeholder="Other away scorer">
-                </div>
+                            <input type="text"
+                                name="home_other_{{ match.id }}"
+                                placeholder="Other home scorer">
+                        </div>
 
-            </div>
+                        <!-- AWAY -->
+                        <div>
+                            <h4>🏃 Away</h4>
 
-            <button type="submit">Submit Prediction</button>
+                            {% for p in match.away_players %}
+                            <label>
+                                <input type="checkbox"
+                                    name="away_scorers_{{ match.id }}"
+                                    value="{{ p.name }}">
+                                {{ p.name }}
+                            </label>
+                            {% endfor %}
 
-        </form>
+                            <input type="text"
+                                name="away_other_{{ match.id }}"
+                                placeholder="Other away scorer">
+                        </div>
+
+                    </div>
+
+                    <button type="submit">Submit Prediction</button>
+
+                </form>
+            {% endif %}
 
         {% else %}
 
-        <p style="color:orange;">⚙️ Admin view (predictions disabled)</p>
+            <p style="color:orange;">⚙️ Admin view (predictions disabled)</p>
 
         {% endif %}
 

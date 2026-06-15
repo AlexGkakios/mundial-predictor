@@ -7385,7 +7385,7 @@
     "assists": 0
   },
   {
-    "name": "Zlatan Ibrahimovic",
+    "name": "Viktor Gyokeres",
     "position": "Forward",
     "teamId": "Sweden",
     "goals": 0,
@@ -7393,13 +7393,6 @@
   },
   {
     "name": "Anthony Elanga",
-    "position": "Forward",
-    "teamId": "Sweden",
-    "goals": 0,
-    "assists": 0
-  },
-  {
-    "name": "Marcus Berg",
     "position": "Forward",
     "teamId": "Sweden",
     "goals": 0,
@@ -7491,13 +7484,6 @@
   },
   {
     "name": "Remo Freuler",
-    "position": "Midfielder",
-    "teamId": "Switzerland",
-    "goals": 0,
-    "assists": 0
-  },
-  {
-    "name": "Xherdan Shaqiri",
     "position": "Midfielder",
     "teamId": "Switzerland",
     "goals": 0,

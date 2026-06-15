@@ -393,11 +393,16 @@ def calculate_points(pred, real_home, real_away, real_scorers):
         predicted = [s.strip() for s in pred["scorers"].split(",")]
         real_list = [s.strip() for s in real_scorers.split(",")]
 
+        max_scorer_points = 3
+
+        scorer_hits = 0
+
         for s in predicted:
             if s in real_list:
-                points += 1
-                scorers_points += 1
+                scorer_hits += 1
 
+        scorers_points = min(scorer_hits, max_scorer_points)
+        points += scorers_points
     return {
         "points": points,
         "exact": exact,

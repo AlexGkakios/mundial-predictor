@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Predictions</title>
-{{ base_style | safe }}
+
 <style>
 body {
     font-family: Arial;
@@ -11,23 +11,36 @@ body {
     margin:0;
 }
 
+/* NAV (same style as dashboard) */
 .nav {
     background:#111827;
     padding:12px 20px;
     display:flex;
     justify-content:space-between;
     align-items:center;
+    flex-wrap:wrap;
+
+    position:sticky;
+    top:0;
+    z-index:1000;
+
+    box-shadow:0 2px 10px rgba(0,0,0,0.3);
 }
 
 .nav a {
     color:#60a5fa;
-    margin-right:12px;
+    margin-right:8px;
     text-decoration:none;
     font-weight:bold;
+
+    display:inline-block;
+    padding:10px 12px;
+    border-radius:8px;
 }
 
 .nav a:hover {
     color:white;
+    background:#1e293b;
 }
 
 .container {
@@ -44,24 +57,16 @@ body {
     border-radius:10px;
 }
 
-input {
-    padding:8px;
-    margin:5px;
-    border-radius:6px;
-    border:none;
+h2 {
+    margin-top:20px;
 }
 
-button {
-    padding:8px 12px;
-    background:#22c55e;
-    border:none;
-    color:white;
-    border-radius:6px;
-    cursor:pointer;
-}
-
-button:hover {
-    background:#16a34a;
+@media (max-width:600px) {
+    .nav a {
+        padding:12px;
+        margin:4px;
+        font-size:15px;
+    }
 }
 </style>
 </head>
@@ -72,10 +77,10 @@ button:hover {
     <div>
         <a href="/dashboard">🏠 Dashboard</a>
         <a href="/leaderboard">🏆 Leaderboard</a>
-        {% if session.role == "admin" %}
-            <a href="/admin">⚙️ Admin</a>
-        {% endif %}
-        <a href="/standings">📊 Standings</a>    </div>
+        <a href="/predictions">📊 Predictions</a>
+        <a href="/groups">🌍 Groups</a>
+        <a href="/standings">📈 Standings</a>
+    </div>
 
     <div>
         <a href="javascript:history.back()">🔙 Back</a>
@@ -97,9 +102,22 @@ button:hover {
     {% endif %}
 
     <div class="card">
+
         <h3>{{ p.home_team }} vs {{ p.away_team }}</h3>
-        <p>{{ p.home_score }} - {{ p.away_score }}</p>
-        <p>⚽ {{ p.scorers }}</p>
+
+        {% if p.finished == 1 %}
+
+            <p>{{ p.home_score }} - {{ p.away_score }}</p>
+            <p>⚽ {{ p.scorers }}</p>
+
+        {% else %}
+
+            <p style="color:#ef4444;font-weight:bold;">
+                🔒 Hidden until match finishes
+            </p>
+
+        {% endif %}
+
     </div>
 
 {% endfor %}

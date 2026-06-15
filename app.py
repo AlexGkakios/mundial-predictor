@@ -522,6 +522,7 @@ def predictions():
         SELECT 
             m.home_team,
             m.away_team,
+            m.finished,
             u.username,
             p.home_score,
             p.away_score,
@@ -529,7 +530,7 @@ def predictions():
         FROM predictions p
         JOIN users u ON u.id = p.player_id
         JOIN matches m ON m.id = p.match_id
-        ORDER BY u.username, m.id
+        ORDER BY m.id, u.username
     """)
 
     data = cursor.fetchall()

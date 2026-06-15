@@ -300,6 +300,13 @@ def predict(match_id):
     if away_other:
         away_scorers.append(away_other)
 
+    # 🚨 VALIDATION RULE
+    if home > 0 and len(home_scorers) == 0:
+        return "⛔ You must select at least 1 HOME scorer"
+
+    if away > 0 and len(away_scorers) == 0:
+        return "⛔ You must select at least 1 AWAY scorer"
+
     # 🚨 VALIDATION (ΑΥΤΟ ΣΟΥ ΕΛΕΙΠΕ)
     if len(home_scorers) > home:
         return f"⛔ Max home scorers allowed: {home}"

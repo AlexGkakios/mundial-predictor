@@ -555,7 +555,12 @@ def predictions():
         grouped.setdefault(user, []).append(r)
 
     # users για dropdown
-    cursor.execute("SELECT username FROM users ORDER BY username")
+        cursor.execute("""
+        SELECT username
+        FROM users
+        WHERE role != 'admin'
+        ORDER BY username
+    """)
     users = cursor.fetchall()
 
     conn.close()

@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Profile</title>
-{{ base_style | safe }}
+
 <style>
 body {
     font-family: Arial;
@@ -11,25 +11,35 @@ body {
     margin:0;
 }
 
+/* NAV (same as dashboard) */
 .nav {
     background:#111827;
     padding:12px 20px;
     display:flex;
     justify-content:space-between;
     align-items:center;
+    flex-wrap:wrap;
+
+    position:sticky;
+    top:0;
+    z-index:1000;
 }
 
 .nav a {
     color:#60a5fa;
-    margin-right:12px;
+    margin-right:8px;
     text-decoration:none;
     font-weight:bold;
+    padding:10px 12px;
+    border-radius:8px;
 }
 
 .nav a:hover {
+    background:#1e293b;
     color:white;
 }
 
+/* CONTAINER */
 .container {
     width:90%;
     max-width:1100px;
@@ -37,6 +47,7 @@ body {
     padding:20px;
 }
 
+/* CARD */
 .card {
     background:#1e293b;
     padding:15px;
@@ -44,66 +55,111 @@ body {
     border-radius:10px;
 }
 
-input {
-    padding:8px;
-    margin:5px;
-    border-radius:6px;
-    border:none;
+/* STATS BOX */
+.stats {
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:15px 0;
 }
 
-button {
-    padding:8px 12px;
-    background:#22c55e;
-    border:none;
-    color:white;
-    border-radius:6px;
-    cursor:pointer;
+.stat {
+    flex:1;
+    min-width:120px;
+    background:#111827;
+    padding:12px;
+    border-radius:10px;
+    text-align:center;
 }
 
-button:hover {
-    background:#16a34a;
+/* TEXT */
+h1, h2, h3 {
+    margin:8px 0;
+}
+
+.highlight {
+    color:#22c55e;
+}
+
+/* MOBILE */
+@media (max-width:600px) {
+    .stats {
+        flex-direction:column;
+    }
 }
 </style>
+
 </head>
 
 <body>
 
+<!-- NAV -->
 <div class="nav">
+
     <div>
         <a href="/dashboard">🏠 Dashboard</a>
         <a href="/leaderboard">🏆 Leaderboard</a>
-        {% if session.role == "admin" %}
-            <a href="/admin">⚙️ Admin</a>
-        {% endif %}
-        <a href="/standings">📊 Standings</a>
+        <a href="/predictions">📊 Predictions</a>
+        <a href="/standings">📈 Standings</a>
     </div>
 
     <div>
         <a href="javascript:history.back()">🔙 Back</a>
         <a href="/logout">🚪 Logout</a>
     </div>
+
 </div>
 
 <div class="container">
 
+<!-- USER INFO -->
 <h1>👤 {{ user.username }}</h1>
 
-<div class="card">
-    <h3>📊 Stats</h3>
-    <p>Points: {{ user.points }}</p>
-    <p>Exact Scores: {{ user.exact_scores }}</p>
-    <p>Results: {{ user.correct_results }}</p>
-    <p>Scorers: {{ user.correct_scorers }}</p>
+<div class="stats">
+
+    <div class="stat">
+        <h3 class="highlight">{{ user.points }}</h3>
+        <p>Points</p>
+    </div>
+
+    <div class="stat">
+        <h3 class="highlight">{{ user.exact_scores }}</h3>
+        <p>Exact Scores</p>
+    </div>
+
+    <div class="stat">
+        <h3 class="highlight">{{ user.correct_results }}</h3>
+        <p>Correct Results</p>
+    </div>
+
+    <div class="stat">
+        <h3 class="highlight">{{ user.correct_scorers }}</h3>
+        <p>Correct Scorers</p>
+    </div>
+
 </div>
 
-<h2>📜 Prediction History</h2>
+<hr style="border:1px solid #1e293b;">
 
-{% for h in history %}
+<h2>📊 Prediction History</h2>
+
+{% for p in history %}
+
 <div class="card">
-    <h3>{{ h.home_team }} vs {{ h.away_team }}</h3>
-    <p>Prediction: {{ h.home_score }} - {{ h.away_score }}</p>
-    <p>⚽ Scorers: {{ h.scorers }}</p>
+
+    <h3>{{ p.home_team }} vs {{ p.away_team }}</h3>
+
+    <p>
+        Your prediction: 
+        <strong>{{ p.home_score }} - {{ p.away_score }}</strong>
+    </p>
+
+    <p>
+        ⚽ {{ p.scorers }}
+    </p>
+
 </div>
+
 {% endfor %}
 
 </div>

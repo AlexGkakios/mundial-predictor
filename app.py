@@ -596,6 +596,8 @@ def profile(username):
         JOIN matches m ON m.id = p.match_id
         JOIN users u ON u.id = p.player_id
         WHERE u.username=%s
+        AND m.finished = 1
+        ORDER BY m.id DESC
     """, (username,))
 
     history = cursor.fetchall()

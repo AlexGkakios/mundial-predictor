@@ -530,13 +530,25 @@ def predictions():
         FROM predictions p
         JOIN users u ON u.id = p.player_id
         JOIN matches m ON m.id = p.match_id
-        ORDER BY m.id, u.username
+        ORDER BY u.username, m.id
     """)
 
-    data = cursor.fetchall()
+    rows = cursor.fetchall()
+
+    grouped = {}
+
+    for r in rows:
+
+        user = r["username"]
+
+        if user not in grouped:
+            grouped[user] = []
+
+        grouped[user].append(r)
+
     conn.close()
 
-    return render_template("predictions.html", predictions=data)
+    return render_template("predictions.html", grouped=grouped)
 
 
 @app.route("/profile/<username>")

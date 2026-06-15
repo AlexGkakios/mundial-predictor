@@ -94,6 +94,33 @@ h2 {
 
 {% set ns = namespace(user='') %}
 
+<div class="card">
+
+    <form method="GET">
+
+        <label style="font-weight:bold;">
+            👤 Select Player
+        </label>
+
+        <select name="player">
+            <option value="">-- All Players --</option>
+
+            {% for u in users %}
+                <option value="{{ u.username }}"
+                    {% if selected_player == u.username %}selected{% endif %}>
+                    {{ u.username }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">
+            Filter
+        </button>
+
+    </form>
+
+</div>
+
 {% for p in predictions %}
 
     {% if ns.user != p.username %}

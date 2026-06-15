@@ -154,8 +154,14 @@ h1, h2, h3 {
         <strong>{{ p.home_score }} - {{ p.away_score }}</strong>
     </p>
 
+    {% if p.finished == 1 %}
+        <p style="color:lime;font-weight:bold;">✔ Finished</p>
+    {% else %}
+        <p style="color:orange;font-weight:bold;">⏳ Pending</p>
+    {% endif %}
+
     <p>
-        ⚽ {{ p.scorers }}
+        ⚽ {{ p.scorers if p.scorers else "No scorers" }}
     </p>
 
 </div>

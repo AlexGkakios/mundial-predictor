@@ -588,17 +588,32 @@ def profile(username):
 
     user = cursor.fetchone()
 
-    # predictions history
-    cursor.execute("""
-        SELECT m.home_team, m.away_team,
-               p.home_score, p.away_score, p.scorers
-        FROM predictions p
-        JOIN matches m ON m.id = p.match_id
-        JOIN users u ON u.id = p.player_id
-        WHERE u.username=%s
-        AND m.finished = 1
-        ORDER BY m.id DESC
-    """, (username,))
+    # check if viewer is the same user
+    viewer = session.get("user")
+
+    if viewer == username:
+        # 👤 OWNER → βλέπει ΟΛΑ τα predictions
+        cursor.execute("""
+            SELECT m.home_team, m.away_team, m.finished,
+                   p.home_score, p.away_score, p.scorers
+            FROM predictions p
+            JOIN matches m ON m.id = p.match_id
+            JOIN users u ON u.id = p.player_id
+            WHERE u.username=%s
+            ORDER BY m.id DESC
+        """, (username,))
+    else:
+        # 👀 OTHERS → μόνο finished
+        cursor.execute("""
+            SELECT m.home_team, m.away_team, m.finished,
+                   p.home_score, p.away_score, p.scorers
+            FROM predictions p
+            JOIN matches m ON m.id = p.match_id
+            JOIN users u ON u.id = p.player_id
+            WHERE u.username=%s
+            AND m.finished = 1
+            ORDER BY m.id DESC
+        """, (username,))
 
     history = cursor.fetchall()
 

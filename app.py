@@ -71,26 +71,39 @@ def login():
 @app.route("/dashboard")
 def dashboard():
 
-    print("SERVER TIME:", datetime.now())
-
-
     if "user" not in session:
         return redirect("/")
 
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM matches ORDER BY kickoff ASC")
+    selected_date = request.args.get("date")
+
+    if selected_date:
+
+        cursor.execute("""
+            SELECT *
+            FROM matches
+            WHERE kickoff LIKE %s
+            ORDER BY kickoff ASC
+        """, (selected_date + "%",))
+
+    else:
+
+        cursor.execute("""
+            SELECT *
+            FROM matches
+            ORDER BY kickoff ASC
+        """)
+
     matches = cursor.fetchall()
 
     conn.close()
 
-    # ώρα Ελλάδας
     now = datetime.now() + timedelta(hours=3)
 
-
-    # 🔥 ADD PLAYERS TO EACH MATCH
     for match in matches:
+
         match["home_players"] = get_players_by_team(match["home_team"])
         match["away_players"] = get_players_by_team(match["away_team"])
 
@@ -108,6 +121,7 @@ def dashboard():
     return render_template(
         "dashboard.html",
         matches=matches,
+        selected_date=selected_date,
         role=session.get("role"),
         username=session.get("user")
     )

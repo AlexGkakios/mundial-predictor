@@ -515,10 +515,13 @@ def logout():
 @app.route("/predictions")
 def predictions():
 
+    player = request.args.get("player")
+
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
+    # μόνο finished matches στο default view
+    base_query = """
         SELECT 
             m.home_team,
             m.away_team,
@@ -530,25 +533,39 @@ def predictions():
         FROM predictions p
         JOIN users u ON u.id = p.player_id
         JOIN matches m ON m.id = p.match_id
-        ORDER BY u.username, m.id
-    """)
+        WHERE m.finished = 1
+    """
 
+    params = []
+
+    # filter αν υπάρχει player
+    if player:
+        base_query += " AND u.username = %s"
+        params.append(player)
+
+    base_query += " ORDER BY u.username, m.id"
+
+    cursor.execute(base_query, params)
     rows = cursor.fetchall()
 
+    # grouping
     grouped = {}
-
     for r in rows:
-
         user = r["username"]
+        grouped.setdefault(user, []).append(r)
 
-        if user not in grouped:
-            grouped[user] = []
-
-        grouped[user].append(r)
+    # users για dropdown
+    cursor.execute("SELECT username FROM users ORDER BY username")
+    users = cursor.fetchall()
 
     conn.close()
 
-    return render_template("predictions.html", grouped=grouped)
+    return render_template(
+        "predictions.html",
+        grouped=grouped,
+        users=users,
+        selected_player=player
+    )
 
 
 @app.route("/profile/<username>")

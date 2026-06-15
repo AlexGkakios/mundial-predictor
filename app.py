@@ -649,6 +649,10 @@ def match_page(match_id):
 
     match = cursor.fetchone()
 
+    if match["finished"] != 1:
+        conn.close()
+        return "⛔ Match predictions are hidden until the match finishes"
+
     # predictions with usernames
     cursor.execute("""
         SELECT u.username, p.home_score, p.away_score, p.scorers

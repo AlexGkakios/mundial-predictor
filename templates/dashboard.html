@@ -302,7 +302,13 @@ h2, h3, h4 {
 
     <br>
 
-    <a href="/match/{{ match.id }}">🔍 View Match</a>
+    {% if match.finished == 1 %}
+
+        <a href="/match/{{ match.id }}">
+            🔍 View Match
+        </a>
+
+    {% endif %}
 
 </div>
 
